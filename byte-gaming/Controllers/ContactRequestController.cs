@@ -55,26 +55,26 @@ namespace byte_gaming.Controllers
         [Route("/contact-request/add")]
         public async Task<IActionResult> AddRequest(ContactRequestDTO crdto)
         {
-            if (crdto.ContactName == null)
+            if (crdto.ContactName == null || crdto.ContactName.Length == 0)
             {
-                return NotFound("Please enter a valid contact request name");
-            } else if (crdto.ContactEmail == null)
+                return NotFound(new {errorMessage = "Please enter a valid contact request name"});
+            } else if (crdto.ContactEmail == null || crdto.ContactEmail.Length == 0)
             {
-                return NotFound("Please enter a valid contact request email");
-            } else if (crdto.ContactMessage == null)
+                return NotFound(new {errorMessage = "Please enter a valid contact request email"});
+            } else if (crdto.ContactMessage == null || crdto.ContactMessage.Length == 0)
             {
-                return NotFound("Please enter a valid contact request message");
+                return NotFound(new {errorMessage = "Please enter a valid contact request message"});
             }
             else
             {
                 var response = await _crService.AddRequestService(crdto);
                 if (response != false)
                 {
-                    return Ok("Contact request successfully added!");
+                    return Ok(new {successMessage = "Contact request successfully added!"});
                 }
                 else
                 {
-                    return NotFound("Something went wrong internally, please try again!");
+                    return NotFound(new {errorMessage = "Something went wrong internally, please try again!"});
                 }
             }
         }
@@ -87,7 +87,7 @@ namespace byte_gaming.Controllers
 
             if (response != false)
             {
-                return Ok($"Contact request with the id of {id} was successfully deleted!");
+                return Ok( new {successMessage = $"Contact request with the id of {id} was successfully deleted!" });
             }
             else
             {
@@ -103,11 +103,12 @@ namespace byte_gaming.Controllers
 
             if (response != false)
             {
-                return Ok($"Product with the id of {cr.ContactId} was successfully updated to have the" +
+                return Ok(new {successMessage = $"Product with the id of {cr.ContactId} was successfully updated to have the" +
                           $" following variables: " +
                           $"{cr.ContactName}," +
                           $" {cr.ContactEmail}," +
-                          $" and {cr.ContactMessage},");
+                          $" and {cr.ContactMessage},"
+                });
             }
             else
             {
